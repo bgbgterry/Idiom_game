@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Idiom_game｜會考成語大亂鬥 ⚡ 102~115歷屆成語電玩複習網</title>
+  <meta name="description" content="專為國中九年級會考打造的 Gen-Z 潮流電玩風成語複習遊戲！完整收錄阿任師 102~115 年歷屆會考成語速記小卡（570 則成語、20 關卡、2,000 道單選題庫）與專屬錯題筆記系統。" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Noto+Sans+TC:wght@500;700;900&family=Outfit:wght@700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom Neo-Brutalism × ZZZ / Brawl Stars Styles -->
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body class="pb-16">
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-[9990] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Loading Overlay -->
+  <div id="app-loader" class="fixed inset-0 z-[9998] bg-[#0D0E15] flex flex-col items-center justify-center p-6 transition-opacity duration-300">
+    <div class="nb-card p-8 max-w-md w-full text-center border-3 border-[#CCFF00]">
+      <div class="inline-block sticker-badge bg-[#CCFF00] text-black mb-3">IDIOM_GAME v1.16</div>
+      <h1 class="text-3xl font-black text-white mb-2">會考成語大亂鬥 ⚡</h1>
+      <p class="text-sm text-slate-300 mb-5">正在載入 102~115 年歷屆會考成語與 2,000 道精選題庫...</p>
+      <div class="w-full h-3 rounded-full bg-black border-2 border-[#CCFF00] overflow-hidden">
+        <div class="h-full w-2/3 bg-[#CCFF00] animate-pulse"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       Top Navigation Bar (Sticky)
+       ==================================================================== -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-black/75 border-b-3 border-black">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" data-nav-view="map">
+        <div class="w-11 h-11 rounded-xl bg-[#CCFF00] text-black border-2 border-black shadow-[3px_3px_0px_#7C4DFF] flex items-center justify-center text-2xl font-black">
+          鬥
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-black text-lg sm:text-xl tracking-tight text-white">會考成語大亂鬥</span>
+            <span class="sticker-badge bg-[#FF2E93] text-white text-[10px] hidden sm:inline-flex">102~115全收錄</span>
+          </div>
+          <div class="text-[11px] font-bold text-[#CCFF00] hidden sm:block">
+            阿任師國文重點速記小卡 × 20關卡 2,000題電玩特訓
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="flex items-center gap-2 order-3 lg:order-2 w-full lg:w-auto justify-center pt-1 lg:pt-0">
+        <button type="button" data-nav-view="map" class="nb-btn nb-btn-lime px-3.5 py-1.5 text-xs sm:text-sm">
+          🗺️ 20 關卡地圖
+        </button>
+        <button type="button" data-nav-view="notebook" class="nb-btn nb-btn-surface px-3.5 py-1.5 text-xs sm:text-sm relative">
+          <span>📓 錯題筆記</span>
+          <span id="nav-nb-badge" class="hidden ml-1 px-1.5 py-0.2 rounded-full bg-[#FF2E93] text-white text-[11px] font-black border border-black">0</span>
+        </button>
+        <button type="button" data-nav-view="dex" class="nb-btn nb-btn-surface px-3.5 py-1.5 text-xs sm:text-sm">
+          🃏 570 成語圖鑑
+        </button>
+      </nav>
+
+      <!-- Right Controls: Challenger Switcher + Theme + Audio -->
+      <div class="flex items-center gap-2 order-2 lg:order-3">
+        <!-- Quick Challenger Select & Modal Trigger -->
+        <div class="flex items-center rounded-xl border-2 border-black bg-[#1C1F2E] p-1 shadow-[3px_3px_0px_#000]">
+          <select
+            id="quick-challenger-select"
+            aria-label="快速切換挑戰者"
+            class="bg-transparent text-white font-black text-xs sm:text-sm px-2 py-1 focus:outline-none cursor-pointer"
+          ></select>
+          <button
+            id="btn-open-challenger-modal"
+            type="button"
+            class="px-2.5 py-1 rounded-lg bg-[#7C4DFF] text-white font-black text-xs border border-black hover:brightness-110"
+            title="新增、切換或管理挑戰者檔案"
+          >
+            管理檔案 🍪
+          </button>
+        </div>
+
+        <button id="btn-theme-toggle" type="button" class="nb-btn nb-btn-surface px-3 py-1.5 text-xs">
+          <span>☀️</span><span class="hidden sm:inline">多巴胺亮色</span>
+        </button>
+
+        <button id="btn-audio-toggle" type="button" class="nb-btn nb-btn-surface w-9 h-9 text-base" title="切換音效">
+          🔊
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====================================================================
+       Main Content Container
+       ==================================================================== -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 pt-6">
+    <!-- VIEW 1: 20-Level Battle Map (預設首頁) -->
+    <section id="view-map" class="space-y-6">
+      <!-- Hero Challenger Dashboard -->
+      <div id="hero-dashboard"></div>
+
+      <!-- Section Header -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black flex items-center gap-2">
+            <span>🗺️ 20 關卡會考戰役地圖</span>
+            <span class="sticker-badge bg-[#CCFF00] text-black text-xs">每關題庫 100 題 / 隨機抽 20 題</span>
+          </h2>
+          <p class="text-xs sm:text-sm opacity-80 mt-0.5">
+            點擊「📖 先看小卡」可預覽該關卡所有阿任師速記小卡；點擊「⚔️ 立即挑戰」將從該關 100 題中隨機抽出 20 題進行實戰！
+          </p>
+        </div>
+      </div>
+
+      <!-- 20 Levels Grid -->
+      <div id="levels-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </section>
+
+    <!-- VIEW 2: Quiz Arena (答題競技場) -->
+    <section id="view-quiz" class="hidden py-2">
+      <div id="quiz-arena-content"></div>
+    </section>
+
+    <!-- VIEW 3: Wrong Question Notebook (專屬錯題筆記) -->
+    <section id="view-notebook" class="hidden space-y-5">
+      <div id="nb-summary-bar" class="nb-card p-5"></div>
+
+      <!-- Filter Bar -->
+      <div class="nb-card p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div>
+          <label class="block text-xs font-black mb-1 opacity-80">🔍 搜尋成語／釋義／自訂筆記</label>
+          <input
+            id="nb-filter-search"
+            type="text"
+            placeholder="輸入成語或關鍵字..."
+            class="w-full px-3 py-2 rounded-xl bg-black/30 border-2 border-black text-sm focus:outline-none focus:border-[#CCFF00]"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-black mb-1 opacity-80">🎯 依關卡篩選</label>
+          <select
+            id="nb-filter-level"
+            class="w-full px-3 py-2 rounded-xl bg-black/30 border-2 border-black text-sm focus:outline-none focus:border-[#CCFF00]"
+          ></select>
+        </div>
+        <div>
+          <label class="block text-xs font-black mb-1 opacity-80">📅 依歷屆年份篩選</label>
+          <select
+            id="nb-filter-year"
+            class="w-full px-3 py-2 rounded-xl bg-black/30 border-2 border-black text-sm focus:outline-none focus:border-[#CCFF00]"
+          ></select>
+        </div>
+        <div>
+          <label class="block text-xs font-black mb-1 opacity-80">⚡ 依熟練狀態篩選</label>
+          <select
+            id="nb-filter-status"
+            class="w-full px-3 py-2 rounded-xl bg-black/30 border-2 border-black text-sm focus:outline-none focus:border-[#CCFF00]"
+          >
+            <option value="all">全部狀態（待熟練 + 已熟練）</option>
+            <option value="unmastered">🔥 尚未熟練（待消滅錯題）</option>
+            <option value="mastered">✅ 已熟練（Mastered）</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Notebook Cards List -->
+      <div id="nb-cards-list" class="space-y-4"></div>
+    </section>
+
+    <!-- VIEW 4: 570 Idioms Full Dex (阿任師歷屆成語全圖鑑) -->
+    <section id="view-dex" class="hidden space-y-5">
+      <div class="nb-card p-5 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="sticker-badge bg-[#00F0FF] text-black">阿任師國文重點速記小卡 (四)</span>
+            <span class="text-xs font-bold opacity-80">102~115年（含補考及大陸考場）</span>
+          </div>
+          <h2 class="text-2xl font-black">🃏 歷屆會考成語全圖鑑（570 則完整收錄）</h2>
+        </div>
+        <div id="dex-count-label" class="text-sm font-black text-[#CCFF00] bg-black px-3 py-1.5 rounded-xl border-2 border-[#CCFF00]"></div>
+      </div>
+
+      <!-- Dex Filter Bar -->
+      <div class="nb-card p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div>
+          <label class="block text-xs font-black mb-1 opacity-80">🔍 搜尋成語／釋義／注音</label>
+          <input
+            id="dex-filter-search"
+            type="text"
+            placeholder="例如：瘡痍、按部就班、115..."
+            class="w-full px-3 py-2 rounded-xl bg-black/30 border-2 border-black text-sm focus:outline-none focus:border-[#CCFF00]"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-black mb-1 opacity-80">🗺️ 依關卡篩選</label>
+          <select
+            id="dex-filter-level"
+            class="w-full px-3 py-2 rounded-xl bg-black/30 border-2 border-black text-sm focus:outline-none focus:border-[#CCFF00]"
+          ></select>
+        </div>
+        <div>
+          <label class="block text-xs font-black mb-1 opacity-80">📅 依歷屆會考年份篩選</label>
+          <select
+            id="dex-filter-year"
+            class="w-full px-3 py-2 rounded-xl bg-black/30 border-2 border-black text-sm focus:outline-none focus:border-[#CCFF00]"
+          ></select>
+        </div>
+        <div>
+          <label class="block text-xs font-black mb-1 opacity-80">⭐ 依高頻星號篩選</label>
+          <select
+            id="dex-filter-stars"
+            class="w-full px-3 py-2 rounded-xl bg-black/30 border-2 border-black text-sm focus:outline-none focus:border-[#CCFF00]"
+          >
+            <option value="all">全部成語 (570 則)</option>
+            <option value="1">⭐ 歷屆重複出現高頻成語 (* 與 **)</option>
+            <option value="2">🔥🔥 跨屆超高頻必考成語 (**)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="dex-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+  </main>
+
+  <!-- ====================================================================
+       MODAL 1: Level Flashcards Preview (本關成語圖鑑預覽)
+       ==================================================================== -->
+  <div id="modal-flashcards" class="hidden fixed inset-0 z-[9000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+    <div class="nb-card w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden border-3 border-[#00F0FF]">
+      <div class="p-4 sm:p-5 border-b-2 border-black flex items-center justify-between gap-3 bg-black/40">
+        <h3 id="flashcards-modal-title" class="font-black text-base sm:text-xl"></h3>
+        <button type="button" data-close-modal="modal-flashcards" class="nb-btn nb-btn-surface px-3 py-1 text-sm">
+          ✕ 關閉
+        </button>
+      </div>
+
+      <div id="flashcards-modal-body" class="p-4 sm:p-6 overflow-y-auto flex-1"></div>
+
+      <div class="p-4 border-t-2 border-black bg-black/40 flex flex-wrap items-center justify-between gap-3">
+        <span class="text-xs opacity-80">💡 小撇步：背熟本關成語釋義與易錯字後，立刻進入實戰抽考 20 題！</span>
+        <div class="flex gap-2.5">
+          <button type="button" data-close-modal="modal-flashcards" class="nb-btn nb-btn-surface px-4 py-2 text-xs sm:text-sm">
+            稍後再戰
+          </button>
+          <button id="btn-modal-start-level" type="button" class="nb-btn nb-btn-lime px-6 py-2 text-xs sm:text-sm">
+            ⚔️ 預習完畢！開始本關挑戰 (20題)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 2: Challenger Switcher & Cookie Storage Manager
+       ==================================================================== -->
+  <div id="modal-challenger" class="hidden fixed inset-0 z-[9000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+    <div class="nb-card w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden border-3 border-[#CCFF00]">
+      <div class="p-4 sm:p-5 border-b-2 border-black flex items-center justify-between bg-black/40">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">👾</span>
+          <h3 class="font-black text-lg sm:text-xl">挑戰者檔案切換器（Cookie 多帳號系統）</h3>
+        </div>
+        <button type="button" data-close-modal="modal-challenger" class="nb-btn nb-btn-surface px-3 py-1 text-sm">
+          ✕ 關閉
+        </button>
+      </div>
+
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1">
+        <!-- Create New Challenger Form -->
+        <form id="form-create-challenger" class="p-4 rounded-2xl bg-black/30 border-2 border-black space-y-3">
+          <div class="text-sm font-black text-[#CCFF00]">➕ 新增挑戰者檔案（建立專屬闖關進度與錯題庫）</div>
+          <div>
+            <div class="text-xs font-bold opacity-80 mb-1.5">選擇代表頭像：</div>
+            <div id="avatar-picker-row" class="flex flex-wrap gap-2"></div>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input
+              id="input-new-challenger"
+              type="text"
+              maxlength="16"
+              placeholder="輸入新挑戰者名字（例如：九年一班阿任、5A戰神）"
+              class="flex-1 px-3.5 py-2.5 rounded-xl bg-black/40 border-2 border-black text-sm font-bold focus:outline-none focus:border-[#CCFF00]"
+            />
+            <button type="submit" class="nb-btn nb-btn-lime px-5 py-2.5 text-sm shrink-0">
+              🚀 建立並切換
+            </button>
+          </div>
+        </form>
+
+        <!-- Existing Challengers List -->
+        <div>
+          <div class="text-sm font-black mb-2.5 flex items-center justify-between">
+            <span>📂 已建立的挑戰者名單（點擊可瞬間切換進度與錯題庫）</span>
+          </div>
+          <div id="challenger-list-container" class="space-y-2.5"></div>
+        </div>
+
+        <!-- Cookie Technical Status Inspector -->
+        <div id="cookie-inspector-box" class="p-4 rounded-2xl bg-black/40 border-2 border-[#00F0FF]/60 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-[#00F0FF]">🍪 瀏覽器 document.cookie 即時紀錄狀態（365天效期 / 4KB防呆壓縮）</span>
+            <span class="sticker-badge bg-[#00F0FF] text-black text-[10px]">StorageManager Active</span>
+          </div>
+          <p class="text-xs opacity-75">
+            系統自動將挑戰者名單（<code>ig_challengers</code>）、活躍挑戰者（<code>ig_active</code>）、20關卡最高分摘要（<code>ig_prog_*</code>）與錯題摘要（<code>ig_wq_*</code>）寫入 <code>document.cookie</code>，並與 <code>localStorage</code> 雙重同步備份。
+          </p>
+          <pre id="cookie-raw-preview" class="p-2.5 rounded-lg bg-black text-[#CCFF00] font-mono text-[11px] overflow-x-auto whitespace-pre-wrap break-all border border-white/15"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Module Script -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

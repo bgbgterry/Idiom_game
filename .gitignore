@@ -1,0 +1,12 @@
+# Temporary Office lock files
+~$*.docx
+~$*.doc
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+_site/

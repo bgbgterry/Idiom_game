@@ -1,0 +1,274 @@
+/* ==========================================================================
+   Idiom_game (會考成語大亂鬥) - Neo-Brutalism × Dark Cyber / Dopamine Light UI
+   Target Audience: 15yo Gen-Z Junior High CAP Exam Challengers
+   ========================================================================== */
+
+:root,
+[data-theme="dark"] {
+  --bg-primary: #0D0E15;
+  --bg-secondary: #161824;
+  --bg-card: #1C1F2E;
+  --bg-card-hover: #25293D;
+  --bg-elevated: #23273A;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --accent-lime: #CCFF00;
+  --accent-pink: #FF2E93;
+  --accent-purple: #7C4DFF;
+  --accent-cyan: #00F0FF;
+  --accent-amber: #FFB800;
+  --border-color: #000000;
+  --border-outline: #383D56;
+  --shadow-color: #000000;
+  --neon-shadow-lime: 4px 4px 0px #000000, 0 0 14px rgba(204, 255, 0, 0.25);
+  --hard-shadow: 4px 4px 0px #000000;
+  --hard-shadow-sm: 3px 3px 0px #000000;
+  --hard-shadow-lg: 6px 6px 0px #000000;
+  --grid-line: rgba(124, 77, 255, 0.08);
+}
+
+[data-theme="light"] {
+  --bg-primary: #FFFDF7;
+  --bg-secondary: #F3F0E6;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8F5EC;
+  --bg-elevated: #EFECE2;
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6B7280;
+  --accent-lime: #B4E600;
+  --accent-pink: #FF2E93;
+  --accent-purple: #6C3CE9;
+  --accent-cyan: #00B8D9;
+  --accent-amber: #F59E0B;
+  --border-color: #111827;
+  --border-outline: #111827;
+  --shadow-color: #111827;
+  --neon-shadow-lime: 4px 4px 0px #111827;
+  --hard-shadow: 4px 4px 0px #111827;
+  --hard-shadow-sm: 3px 3px 0px #111827;
+  --hard-shadow-lg: 6px 6px 0px #111827;
+  --grid-line: rgba(17, 24, 39, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-primary);
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--text-primary);
+  font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Neo-Brutalist Surfaces */
+.nb-card {
+  background-color: var(--bg-card);
+  border: 3px solid var(--border-outline);
+  box-shadow: var(--hard-shadow);
+  border-radius: 16px;
+  transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+[data-theme="dark"] .nb-card {
+  border-color: #3B4262;
+  box-shadow: 4px 4px 0px #050609;
+}
+
+.nb-card-interactive:hover {
+  transform: translate(-2px, -2px);
+  border-color: var(--accent-lime);
+  box-shadow: 6px 6px 0px var(--shadow-color);
+}
+
+.nb-card-interactive:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--shadow-color);
+}
+
+/* Neo-Brutalist Buttons */
+.nb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  border: 3px solid #000000;
+  border-radius: 12px;
+  box-shadow: var(--hard-shadow-sm);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.15s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.nb-btn:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #000000;
+  filter: brightness(1.05);
+}
+
+.nb-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000000;
+}
+
+.nb-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nb-btn-lime {
+  background-color: #CCFF00;
+  color: #0D0E15;
+}
+
+.nb-btn-pink {
+  background-color: #FF2E93;
+  color: #FFFFFF;
+}
+
+.nb-btn-purple {
+  background-color: #7C4DFF;
+  color: #FFFFFF;
+}
+
+.nb-btn-cyan {
+  background-color: #00F0FF;
+  color: #0D0E15;
+}
+
+.nb-btn-amber {
+  background-color: #FFB800;
+  color: #0D0E15;
+}
+
+.nb-btn-surface {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-outline);
+}
+
+/* Sticker Badges */
+.sticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 900;
+  border: 2px solid #000000;
+  border-radius: 999px;
+  box-shadow: 2px 2px 0px #000000;
+  letter-spacing: 0.03em;
+}
+
+.sticker-tilt-left {
+  transform: rotate(-2.5deg);
+}
+
+.sticker-tilt-right {
+  transform: rotate(2.5deg);
+}
+
+/* Quiz Option Buttons */
+.quiz-option-btn {
+  width: 100%;
+  text-align: left;
+  padding: 1rem 1.25rem;
+  background-color: var(--bg-elevated);
+  border: 3px solid var(--border-outline);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0px var(--shadow-color);
+  transition: all 0.14s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  cursor: pointer;
+}
+
+.quiz-option-btn:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  border-color: var(--accent-cyan);
+  box-shadow: 6px 6px 0px var(--shadow-color);
+}
+
+.quiz-option-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--shadow-color);
+}
+
+.quiz-option-btn.option-correct {
+  background-color: rgba(204, 255, 0, 0.18) !important;
+  border-color: #22C55E !important;
+  box-shadow: 4px 4px 0px #15803D !important;
+}
+
+[data-theme="light"] .quiz-option-btn.option-correct {
+  background-color: #DCFCE7 !important;
+  border-color: #16A34A !important;
+}
+
+.quiz-option-btn.option-wrong {
+  background-color: rgba(255, 46, 147, 0.2) !important;
+  border-color: #FF2E93 !important;
+  box-shadow: 4px 4px 0px #9D174D !important;
+  animation: shakeError 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+[data-theme="light"] .quiz-option-btn.option-wrong {
+  background-color: #FFE4E6 !important;
+  border-color: #E11D48 !important;
+}
+
+/* Animations */
+@keyframes shakeError {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+  40%, 60% { transform: translate3d(6px, 0, 0); }
+}
+
+@keyframes popCombo {
+  0% { transform: scale(0.6) rotate(-6deg); opacity: 0; }
+  60% { transform: scale(1.18) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-2deg); opacity: 1; }
+}
+
+.combo-pop {
+  animation: popCombo 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-purple);
+  border-radius: 99px;
+  border: 2px solid var(--bg-primary);
+}
+
+/* Confetti Canvas */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
